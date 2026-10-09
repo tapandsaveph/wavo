@@ -7,6 +7,7 @@ import Combine
 // Capture/session/model state is confined to queue; published state is changed on main.
 final class CameraService: NSObject, ObservableObject, AVCaptureVideoDataOutputSampleBufferDelegate {
  let session = AVCaptureSession()
+ let capturedLetters = PassthroughSubject<LetterCandidate, Never>()
  @Published private(set) var candidate: LetterCandidate?
  @Published private(set) var status = "Tap Start Camera to spell a message."
  @Published private(set) var running = false
@@ -71,24 +72,25 @@ final class CameraService: NSObject, ObservableObject, AVCaptureVideoDataOutputS
   do {
    try VNImageRequestHandler(cmSampleBuffer: buffer, orientation: .right, options: [:]).perform([request])
    guard let hand = request.results?.first, let model else {
-    stability.reset()
+    _ = stability.observe(nil, now: now)
     publish(nil, "No hand detected. Move your hand into view.", running: true); return
    }
    let result = try model.prediction(poses: hand.keypointsMultiArray())
    let label = result.label
    guard let probability = result.labelProbabilities[label] else {
-    stability.reset()
+    _ = stability.observe(LetterCandidate(letter: "", probability: 0, observedAt: now), now: now)
     publish(nil, "Prediction unavailable. You can type instead.", running: true); return
    }
    let letter = LetterCandidate(letter: label.uppercased(), probability: probability, observedAt: now)
    guard let stable = stability.observe(letter, now: now) else {
     let message = letter.isUsable(now: now) && probability >= 0.85
-     ? "Hold steady while the letter is checked."
+     ? (stability.alreadyCaptured(letter.letter) ? "Letter added. Change signs, or lower your hand to repeat it." : "Hold steady briefly to add this letter.")
      : "Uncertain — hold again. Keep your hand clearly lit."
     publish(nil, message, running: true); return
    }
-   publish(stable, "Ready: \(stable.letter). Check it, then tap Add Letter.", running: true)
-  } catch { stability.reset(); publish(nil, "Could not read this hand pose. Try again.", running: true) }
+   publish(stable, "Added \(stable.letter). Change signs, or lower your hand to repeat it.", running: true)
+   DispatchQueue.main.async { self.capturedLetters.send(stable) }
+  } catch { _ = stability.observe(LetterCandidate(letter: "", probability: 0, observedAt: now), now: now); publish(nil, "Could not read this hand pose. Try again.", running: true) }
  }
  private func publish(_ candidate: LetterCandidate?, _ status: String, running: Bool) {
   DispatchQueue.main.async { self.candidate = candidate; self.status = status; self.running = running }

@@ -25,20 +25,35 @@ struct AudioActivity {
  mutating func stop() { isListening = false; isSpeaking = false }
 }
 
-// Ten recent predictions, including uncertain samples, prevent transition frames from winning.
+// Emit once per steady sign; brief detection flicker does not rearm a held letter.
 struct LetterStabilityFilter {
- private var samples: [(date: Date, letter: String?)] = []
- mutating func reset() { samples.removeAll() }
+ private var held: String?
+ private var heldSince: Date?
+ private var lastObservation: Date?
+ private var captured: String?
+ private var missingSince: Date?
+ func alreadyCaptured(_ letter: String) -> Bool { captured == letter }
+ mutating func reset() { self = LetterStabilityFilter() }
  mutating func observe(_ candidate: LetterCandidate?, now: Date) -> LetterCandidate? {
-  guard let candidate, now.timeIntervalSince(candidate.observedAt) >= 0,
-        now.timeIntervalSince(candidate.observedAt) <= 0.5 else { reset(); return nil }
-  if let last = samples.last, now.timeIntervalSince(last.date) > 0.5 || now <= last.date { reset() }
-  samples.removeAll { now.timeIntervalSince($0.date) > 2 }
-  let confident = candidate.isUsable(now: now) && candidate.probability >= 0.85
-  samples.append((now, confident ? candidate.letter : nil))
-  if samples.count > 10 { samples.removeFirst(samples.count - 10) }
-  guard confident, samples.count == 10,
-        samples.filter({ $0.letter == candidate.letter }).count >= 8 else { return nil }
+  if let lastObservation, now <= lastObservation || now.timeIntervalSince(lastObservation) > 0.5 {
+   held = nil; heldSince = nil
+  }
+  lastObservation = now
+  guard let candidate else {
+   held = nil; heldSince = nil
+   if missingSince == nil { missingSince = now }
+   if let missingSince, now.timeIntervalSince(missingSince) >= 0.3 { captured = nil }
+   return nil
+  }
+  missingSince = nil
+  guard candidate.isUsable(now: now), candidate.probability >= 0.85,
+        now.timeIntervalSince(candidate.observedAt) <= 0.5 else {
+   held = nil; heldSince = nil; return nil
+  }
+  if held != candidate.letter { held = candidate.letter; heldSince = now }
+  guard let heldSince, now.timeIntervalSince(heldSince) >= 0.45,
+        captured != candidate.letter else { return nil }
+  captured = candidate.letter
   return candidate
  }
 }

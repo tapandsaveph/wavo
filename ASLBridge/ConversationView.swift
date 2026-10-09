@@ -35,6 +35,9 @@ struct ConversationView: View {
    }.tabItem { Label("Library", systemImage: "book") }.tag(1)
   }.tint(teal)
    .sheet(item: $reference) { SigningReferenceView(entry: $0).ignoresSafeArea() }
+   .onReceive(camera.capturedLetters) { letter in
+    if tab == 0 && mode == .spell && scenePhase == .active && camera.running { draft.add(letter, now: Date()) }
+   }
    .onChange(of: mode) { _, _ in camera.stop(); speech.stopAll() }
    .onChange(of: tab) { _, _ in camera.stop(); speech.stopAll() }
    .onChange(of: scenePhase) { _, phase in if phase != .active { camera.stop(); speech.stopAll() } }
@@ -64,12 +67,9 @@ struct ConversationView: View {
     Button(camera.running ? "Stop Camera" : "Start Camera", systemImage: camera.running ? "camera.fill" : "camera") {
      if camera.running { camera.stop() } else { speech.stopAll(); camera.start() }
     }.buttonStyle(.bordered).controlSize(.large)
-    TimelineView(.periodic(from: .now, by: 0.2)) { context in
-     Button("Add Letter", systemImage: "plus") { draft.add(camera.candidate, now: Date()) }
-      .buttonStyle(.borderedProminent).controlSize(.large)
-      .disabled(!(camera.candidate?.isUsable(now: context.date) ?? false))
-    }
+
    }
+   Text("Hold each letter briefly to add it. Lower your hand between repeated letters.").font(.caption).foregroundStyle(.secondary)
    Text("Your message").font(.headline)
    TextEditor(text: $draft.text).frame(minHeight: 110).padding(8)
     .background(.background, in: RoundedRectangle(cornerRadius: 16))

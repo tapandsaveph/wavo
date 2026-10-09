@@ -30,3 +30,6 @@ Eight core tests pass, including full-window gating, eight confident matches out
 
 ## Capture behavior
 Manual Add Letter remains intentional during validation. Each tap adds the currently ready letter, allowing repeated letters. There is no automatic append or speech. Camera history resets when the hand disappears, capture fails, or the session stops/restarts. Native text autocorrection is disabled in the draft to preserve intended names and words.
+
+## Faster automatic capture (supersedes manual stability behavior above)
+Eight core tests pass. Capture now requires an uninterrupted confident same-letter hold of at least 0.45 seconds. Each held letter emits once; a different stable letter or at least 0.3 seconds of observed hand absence allows the next capture. Uncertain predictions and capture errors interrupt the hold without rearming duplicates. Speech remains explicitly triggered. Physical iPhone build succeeded; live speed and accuracy need user validation.
