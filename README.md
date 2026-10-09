@@ -6,7 +6,7 @@ Native iPhone hackathon prototype for exchanging messages between a Deaf ASL use
 1. Open `ASLBridge.xcodeproj` in Xcode 27.
 2. For the simulator, choose an iPhone simulator and Run. Camera recognition requires a physical iPhone.
 3. For a physical phone running iOS 18 or newer: connect and trust the phone, enable Developer Mode, select your Personal Team under Signing & Capabilities, and change the bundle identifier to a unique value. Select the phone and Run.
-4. In **Spell**, tap Start Camera, hold one alphabet pose steadily for about half a second to add it automatically. Change signs for the next letter; lower your hand briefly before repeating the same letter. Review the draft; use Space/Delete or edit the message directly. Tap Speak Message to read the reviewed text aloud.
+4. In **Spell**, tap Start Camera, hold one alphabet pose steadily for about a quarter second to add it automatically. Change signs for the next letter; lower your hand briefly before repeating the same letter. Review the draft; use Space/Delete or edit the message directly. Tap Speak Message to read the reviewed text aloud.
 5. In **Listen**, tap Start Listening and grant microphone/speech permissions. Speak an English reply; captions appear. Tap Stop Listening. Captions can also be typed.
 6. Library includes Hello, Name, Thank you, Yes, and No. Open each original ASL University reference inside the app or manually add its word to your message. Exact matching captions (for example “Yes!”) offer a reference button. These references require internet; no signing videos are bundled.
 

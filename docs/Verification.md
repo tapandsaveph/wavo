@@ -33,3 +33,6 @@ Manual Add Letter remains intentional during validation. Each tap adds the curre
 
 ## Faster automatic capture (supersedes manual stability behavior above)
 Eight core tests pass. Capture now requires an uninterrupted confident same-letter hold of at least 0.45 seconds. Each held letter emits once; a different stable letter or at least 0.3 seconds of observed hand absence allows the next capture. Uncertain predictions and capture errors interrupt the hold without rearming duplicates. Speech remains explicitly triggered. Physical iPhone build succeeded; live speed and accuracy need user validation.
+
+## Faster capture timing experiment
+The same-letter hold is now 0.25 seconds and camera processing is throttled to a minimum interval of 0.07 seconds (actual throughput depends on device and inference). Confidence remains 0.85; duplicate prevention and deliberate speech remain unchanged. Nine core tests pass, including rejection before the quarter-second hold. Physical iPhone build succeeded. Live accidental capture rate and C/E confusion remain unmeasured.

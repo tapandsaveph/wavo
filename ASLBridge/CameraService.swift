@@ -67,7 +67,7 @@ final class CameraService: NSObject, ObservableObject, AVCaptureVideoDataOutputS
  }
  func captureOutput(_ output: AVCaptureOutput, didOutput buffer: CMSampleBuffer, from connection: AVCaptureConnection) {
   let now = Date()
-  guard desiredRunning, now.timeIntervalSince(lastFrame) >= 0.15 else { return }
+  guard desiredRunning, now.timeIntervalSince(lastFrame) >= 0.07 else { return }
   lastFrame = now
   do {
    try VNImageRequestHandler(cmSampleBuffer: buffer, orientation: .right, options: [:]).perform([request])

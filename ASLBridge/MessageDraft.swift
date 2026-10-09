@@ -51,7 +51,7 @@ struct LetterStabilityFilter {
    held = nil; heldSince = nil; return nil
   }
   if held != candidate.letter { held = candidate.letter; heldSince = now }
-  guard let heldSince, now.timeIntervalSince(heldSince) >= 0.45,
+  guard let heldSince, now.timeIntervalSince(heldSince) >= 0.25,
         captured != candidate.letter else { return nil }
   captured = candidate.letter
   return candidate

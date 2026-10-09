@@ -30,12 +30,12 @@ import Foundation
  var filter = LetterStabilityFilter()
  let start = Date()
  for index in 0..<4 {
-  let now = start.addingTimeInterval(Double(index) * 0.16)
+  let now = start.addingTimeInterval(Double(index) * 0.10)
   let result = filter.observe(LetterCandidate(letter: "A", probability: 0.95, observedAt: now), now: now)
   #expect((result != nil) == (index == 3))
  }
  for index in 4..<10 {
-  let now = start.addingTimeInterval(Double(index) * 0.16)
+  let now = start.addingTimeInterval(Double(index) * 0.10)
   #expect(filter.observe(LetterCandidate(letter: "A", probability: 0.95, observedAt: now), now: now) == nil)
  }
 }
@@ -45,13 +45,13 @@ import Foundation
  func hold(_ letter: String, offset: Double) -> String? {
   var result: String?
   for index in 0..<4 {
-   let now = start.addingTimeInterval(offset + Double(index) * 0.16)
+   let now = start.addingTimeInterval(offset + Double(index) * 0.10)
    result = filter.observe(LetterCandidate(letter: letter, probability: 0.95, observedAt: now), now: now)?.letter
   }
   return result
  }
  #expect(hold("A", offset: 0) == "A")
- #expect(hold("B", offset: 0.64) == "B")
+ #expect(hold("B", offset: 0.4) == "B")
  _ = filter.observe(nil, now: start.addingTimeInterval(1.2))
  _ = filter.observe(nil, now: start.addingTimeInterval(1.6))
  #expect(hold("B", offset: 1.76) == "B")
@@ -60,10 +60,21 @@ import Foundation
  var filter = LetterStabilityFilter()
  let start = Date()
  for index in 0..<12 {
-  let now = start.addingTimeInterval(Double(index) * 0.16)
+  let now = start.addingTimeInterval(Double(index) * 0.10)
   #expect(filter.observe(LetterCandidate(letter: index % 2 == 0 ? "A" : "S", probability: 0.99, observedAt: now), now: now) == nil)
  }
  let now = start.addingTimeInterval(2)
  #expect(filter.observe(LetterCandidate(letter: "S", probability: 0.84, observedAt: now), now: now) == nil)
  #expect(filter.observe(LetterCandidate(letter: "S", probability: 0.99, observedAt: start), now: now) == nil)
+}
+
+@Test func fastCaptureWaitsQuarterSecond() {
+ var filter = LetterStabilityFilter()
+ let start = Date()
+ for offset in [0.0, 0.08, 0.16, 0.24] {
+  let now = start.addingTimeInterval(offset)
+  #expect(filter.observe(LetterCandidate(letter: "A", probability: 0.95, observedAt: now), now: now) == nil)
+ }
+ let now = start.addingTimeInterval(0.32)
+ #expect(filter.observe(LetterCandidate(letter: "A", probability: 0.95, observedAt: now), now: now)?.letter == "A")
 }
