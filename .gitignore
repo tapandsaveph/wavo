@@ -3,3 +3,19 @@
 DerivedData/
 xcuserdata/
 *.xcuserstate
+# Fetched by scripts/setup-offline-voice.sh; do not redistribute runtime binaries/data.
+Packages/OfflineSpeech/*.xcframework/
+ASLBridge/Resources/OfflineVoice/*.onnx
+ASLBridge/Resources/OfflineVoice/*.onnx.json
+ASLBridge/Resources/OfflineVoice/tokens.txt
+ASLBridge/Resources/OfflineVoice/espeak-ng-data/
+# Private recordings and local credentials must stay outside the public repository.
+*.MOV
+*.mov
+*.mp4
+*.HEIC
+*.heic
+*.wav
+.env*
+*.p12
+*.mobileprovision

@@ -57,3 +57,39 @@ struct LetterStabilityFilter {
   return candidate
  }
 }
+
+// One draft entry per gesture; two confident Other windows permit a new Hello.
+struct HelloCaptureGate {
+ private var captured = false
+ private var otherWindows = 0
+ mutating func reset() { captured = false; otherWindows = 0 }
+ mutating func observe(label: String, confidence: Double) -> Bool {
+  guard confidence.isFinite, confidence >= 0.9 else { otherWindows = 0; return false }
+  if label == "Other" {
+   otherWindows += 1
+   if otherWindows >= 2 { captured = false }
+   return false
+  }
+  otherWindows = 0
+  guard ["Hello", "ThankYou"].contains(label), !captured else { return false }
+  captured = true
+  return true
+ }
+}
+
+struct HelloWindowCheck {
+ static func canPredict(_ tracked: [Bool]) -> Bool {
+  tracked.count == 15 && tracked.last == true && tracked.filter { $0 }.count >= 9
+ }
+}
+
+enum TrainingClipLabel: String, CaseIterable {
+ case thankYou = "Thank you", hello = "Hello", ordinary = "Ordinary movement"
+ var folder: String {
+  switch self { case .thankYou: "ThankYou"; case .hello: "Hello"; case .ordinary: "Other" }
+ }
+}
+enum TrainingClipSplit: String, CaseIterable {
+ case training = "Training", testing = "Testing"
+ var folder: String { self == .training ? "train" : "test" }
+}
