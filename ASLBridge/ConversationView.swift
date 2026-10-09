@@ -73,7 +73,7 @@ struct ConversationView: View {
    Text("Your message").font(.headline)
    TextEditor(text: $draft.text).frame(minHeight: 110).padding(8)
     .background(.background, in: RoundedRectangle(cornerRadius: 16))
-    .font(.title2).accessibilityLabel("Your editable message")
+    .font(.title2).autocorrectionDisabled().accessibilityLabel("Your editable message")
    HStack {
     Button("Space") { draft.addSpace() }
     Button("Delete", systemImage: "delete.left") { draft.deleteLast() }.disabled(draft.text.isEmpty)

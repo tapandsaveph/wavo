@@ -15,6 +15,7 @@ final class CameraService: NSObject, ObservableObject, AVCaptureVideoDataOutputS
  private var desiredRunning = false
  private var model: ASLHandPoseClassifier17?
  private var lastFrame = Date.distantPast
+ private var stability = LetterStabilityFilter()
  private let request: VNDetectHumanHandPoseRequest = {
   let request = VNDetectHumanHandPoseRequest(); request.maximumHandCount = 1; return request
  }()
@@ -32,6 +33,7 @@ final class CameraService: NSObject, ObservableObject, AVCaptureVideoDataOutputS
  func stop() {
   queue.async {
    self.desiredRunning = false
+   self.stability.reset()
    if self.session.isRunning { self.session.stopRunning() }
    self.publish(nil, "Camera stopped. You can still type.", running: false)
   }
@@ -55,6 +57,8 @@ final class CameraService: NSObject, ObservableObject, AVCaptureVideoDataOutputS
      self.session.addOutput(output)
      self.configured = true
     }
+    self.stability.reset()
+    self.lastFrame = .distantPast
     self.session.startRunning()
     self.publish(nil, "Hold one hand clearly in view.", running: self.session.isRunning)
    } catch { self.publish(nil, "Camera or model unavailable. Try restarting the app, or type.", running: false) }
@@ -67,19 +71,24 @@ final class CameraService: NSObject, ObservableObject, AVCaptureVideoDataOutputS
   do {
    try VNImageRequestHandler(cmSampleBuffer: buffer, orientation: .right, options: [:]).perform([request])
    guard let hand = request.results?.first, let model else {
+    stability.reset()
     publish(nil, "No hand detected. Move your hand into view.", running: true); return
    }
    let result = try model.prediction(poses: hand.keypointsMultiArray())
    let label = result.label
    guard let probability = result.labelProbabilities[label] else {
+    stability.reset()
     publish(nil, "Prediction unavailable. You can type instead.", running: true); return
    }
    let letter = LetterCandidate(letter: label.uppercased(), probability: probability, observedAt: now)
-   guard letter.isUsable(now: now) else {
-    publish(nil, "Uncertain letter. Adjust your hand or lighting.", running: true); return
+   guard let stable = stability.observe(letter, now: now) else {
+    let message = letter.isUsable(now: now) && probability >= 0.85
+     ? "Hold steady while the letter is checked."
+     : "Uncertain — hold again. Keep your hand clearly lit."
+    publish(nil, message, running: true); return
    }
-   publish(letter, "Check the letter, then tap Add Letter.", running: true)
-  } catch { publish(nil, "Could not read this hand pose. Try again.", running: true) }
+   publish(stable, "Ready: \(stable.letter). Check it, then tap Add Letter.", running: true)
+  } catch { stability.reset(); publish(nil, "Could not read this hand pose. Try again.", running: true) }
  }
  private func publish(_ candidate: LetterCandidate?, _ status: String, running: Bool) {
   DispatchQueue.main.async { self.candidate = candidate; self.status = status; self.running = running }

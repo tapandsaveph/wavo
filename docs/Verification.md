@@ -24,3 +24,9 @@ Tests of AudioActivity alone are not tests of Apple's capture/recognition servic
 - Library references for Hello, Name, Thank you, Yes, and No were opened and verified at their original source.
 - Updated physical-device build succeeds; app installs and launches. User playback checks of the in-app reference pages are pending.
 - WLASL terms and target-word sample metadata were inspected; no word-sign training has occurred.
+
+## Letter stability update
+Eight core tests pass, including full-window gating, eight confident matches out of ten, split predictions, low-confidence current frames, missing hands, stale observations and time gaps. Physical iPhone build succeeded. Live recognition accuracy still requires user testing; temporal consistency does not correct consistently wrong model predictions.
+
+## Capture behavior
+Manual Add Letter remains intentional during validation. Each tap adds the currently ready letter, allowing repeated letters. There is no automatic append or speech. Camera history resets when the hand disappears, capture fails, or the session stops/restarts. Native text autocorrection is disabled in the draft to preserve intended names and words.

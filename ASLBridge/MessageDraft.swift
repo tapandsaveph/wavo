@@ -24,3 +24,21 @@ struct AudioActivity {
  mutating func startSpeaking() { isListening = false; isSpeaking = true }
  mutating func stop() { isListening = false; isSpeaking = false }
 }
+
+// Ten recent predictions, including uncertain samples, prevent transition frames from winning.
+struct LetterStabilityFilter {
+ private var samples: [(date: Date, letter: String?)] = []
+ mutating func reset() { samples.removeAll() }
+ mutating func observe(_ candidate: LetterCandidate?, now: Date) -> LetterCandidate? {
+  guard let candidate, now.timeIntervalSince(candidate.observedAt) >= 0,
+        now.timeIntervalSince(candidate.observedAt) <= 0.5 else { reset(); return nil }
+  if let last = samples.last, now.timeIntervalSince(last.date) > 0.5 || now <= last.date { reset() }
+  samples.removeAll { now.timeIntervalSince($0.date) > 2 }
+  let confident = candidate.isUsable(now: now) && candidate.probability >= 0.85
+  samples.append((now, confident ? candidate.letter : nil))
+  if samples.count > 10 { samples.removeFirst(samples.count - 10) }
+  guard confident, samples.count == 10,
+        samples.filter({ $0.letter == candidate.letter }).count >= 8 else { return nil }
+  return candidate
+ }
+}
