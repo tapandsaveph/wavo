@@ -8,10 +8,10 @@ Native iPhone hackathon prototype for exchanging messages between a Deaf ASL use
 3. For a physical phone running iOS 18 or newer: connect and trust the phone, enable Developer Mode, select your Personal Team under Signing & Capabilities, and change the bundle identifier to a unique value. Select the phone and Run.
 4. In **Spell**, tap Start Camera, hold one alphabet pose, check the candidate letter, and tap Add Letter. Repeat; use Space/Delete or edit the message directly. Tap Speak Message to read the reviewed text aloud.
 5. In **Listen**, tap Start Listening and grant microphone/speech permissions. Speak an English reply; captions appear. Tap Stop Listening. Captions can also be typed.
-6. Library opens original ASL University reference pages in your browser. These references require internet; no signing videos are bundled.
+6. Library includes Hello, Name, Thank you, Yes, and No. Open each original ASL University reference inside the app or manually add its word to your message. Exact matching captions (for example “Yes!”) offer a reference button. These references require internet; no signing videos are bundled.
 
 ## What works and what is limited
-- Bundled alphabet hand-pose recognition, explicit letter capture, editable message, native speech synthesis, on-device English speech recognition when supported, and reference links.
+- Bundled alphabet hand-pose recognition, explicit letter capture, editable message, native speech synthesis, on-device English speech recognition when supported, and an in-app reference viewer, library search, and exact-word caption reference matching.
 - This is not a continuous ASL translator. No word-sign recognition model is installed. J and Z involve movement and may require manual entry. Accuracy varies with signer, pose, lighting, and camera angle.
 - A model probability is not a guarantee of correctness. Always review the message before speaking.
 - Speech permission and on-device recognition availability must be checked on each device. The app offers typing if offline recognition is unavailable; it does not silently fall back to server transcription.

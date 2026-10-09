@@ -11,3 +11,6 @@
 - Independent reviewer found a partial camera configuration retry risk; moved canAdd checks before input/output mutation. Speech completion also checks current speaking activity to avoid clearing listening state.
 - Simulator visual inspection led to a compact navigation title and a shorter camera preview to bring message actions closer to view.
 - Remaining: physical end-to-end checks by user/Sophia, permitted bundled videos, optional word-sign model, demo recording, and GitHub destination. These are not marked complete.
+- Library now has five searchable references, an in-app Safari viewer, manual word insertion, and exact-caption reference matching. No automatic sentence translation is implied.
+- New tests first failed on absent matching/filter methods; all five shared-core tests now pass.
+- User selected existing dataset. WLASL license, metadata, and source availability investigated; training waits for required agreement to dataset terms. Dataset videos are not used as library content.

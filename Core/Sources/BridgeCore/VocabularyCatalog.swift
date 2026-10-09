@@ -1,0 +1,1 @@
+../../../ASLBridge/VocabularyCatalog.swift

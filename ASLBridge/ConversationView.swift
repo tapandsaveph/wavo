@@ -7,6 +7,7 @@ struct ConversationView: View {
  @State private var draft = MessageDraft()
  @State private var mode = InputMode.spell
  @State private var tab = 0
+ @State private var reference: VocabularyEntry?
  @Environment(\.scenePhase) private var scenePhase
  private enum InputMode: String, CaseIterable { case spell = "Spell", listen = "Listen" }
  private let teal = Color(red: 0.05, green: 0.38, blue: 0.39)
@@ -27,8 +28,13 @@ struct ConversationView: View {
     .navigationBarTitleDisplayMode(.inline)
     .scrollDismissesKeyboard(.interactively)
    }.tabItem { Label("Conversation", systemImage: "bubble.left.and.bubble.right") }.tag(0)
-   LibraryView().tabItem { Label("Library", systemImage: "book") }.tag(1)
+   LibraryView { word in
+    camera.stop(); speech.stopAll()
+    draft.addSpace(); draft.text += word
+    mode = .spell; tab = 0
+   }.tabItem { Label("Library", systemImage: "book") }.tag(1)
   }.tint(teal)
+   .sheet(item: $reference) { SigningReferenceView(entry: $0).ignoresSafeArea() }
    .onChange(of: mode) { _, _ in camera.stop(); speech.stopAll() }
    .onChange(of: tab) { _, _ in camera.stop(); speech.stopAll() }
    .onChange(of: scenePhase) { _, phase in if phase != .active { camera.stop(); speech.stopAll() } }
@@ -94,6 +100,15 @@ struct ConversationView: View {
    }
    TextEditor(text: $speech.transcript).font(.title).frame(minHeight: 240).padding(12)
     .background(.background, in: RoundedRectangle(cornerRadius: 18)).accessibilityLabel("Editable reply captions")
+   if let entry = VocabularyCatalog.matching(speech.transcript) {
+    Button {
+     speech.stopAll(); reference = entry
+    } label: {
+     Label("View sign: \(entry.title)", systemImage: "play.rectangle")
+    }.buttonStyle(.bordered)
+    Text("Reference for this word only; captions are not translated into full ASL sentences.")
+     .font(.caption).foregroundStyle(.secondary)
+   }
    Text(speech.status).foregroundStyle(.secondary)
    Button {
     camera.stop()

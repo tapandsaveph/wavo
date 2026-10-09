@@ -17,3 +17,10 @@
 - No submission repository has been published; destination is not yet chosen.
 
 Tests of AudioActivity alone are not tests of Apple's capture/recognition services. Device checks remain necessary.
+
+## Library update
+- User confirmed new app letter capture, speech playback, and captions work.
+- Five shared-core tests pass, including exact caption matching, search aliases, unique vocabulary IDs, and honest recognition availability.
+- Library references for Hello, Name, Thank you, Yes, and No were opened and verified at their original source.
+- Updated physical-device build succeeds; app installs and launches. User playback checks of the in-app reference pages are pending.
+- WLASL terms and target-word sample metadata were inspected; no word-sign training has occurred.
