@@ -1,5 +1,7 @@
 # Wavo
 
+<img src="docs/assets/wavo-logo.png" alt="Wavo logo: a waving hand on a yellow background" width="160">
+
 **Two-way sign language communication app for iPhone.** Turn fingerspelling and supported American Sign Language (ASL) signs into spoken messages, and speech into live captions. Sign recognition and voice generation run on your phone.
 
 ## Try it on an iPhone
