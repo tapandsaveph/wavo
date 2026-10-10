@@ -8,6 +8,7 @@ struct ConversationView: View {
  @State private var mode = InputMode.spell
  @State private var tab = 0
  @State private var showTraining = false
+ @FocusState private var messageFocused: Bool
  @State private var showEditor = false
  @State private var trainingLabel = TrainingClipLabel.thankYou
  @State private var trainingSplit = TrainingClipSplit.training
@@ -118,7 +119,7 @@ struct ConversationView: View {
   VStack(spacing: 4) {
    Button { showEditor = true } label: {
     HStack {
-     Text(draft.text.isEmpty ? "Your message…" : draft.text)
+     Text(draft.text.isEmpty ? "Type or sign…" : draft.text)
       .font(.title3).foregroundStyle(.white).lineLimit(2)
       .frame(maxWidth: .infinity, alignment: .leading)
      Image(systemName: "pencil").foregroundStyle(.yellow)
@@ -147,10 +148,25 @@ struct ConversationView: View {
    .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 18))
    .sheet(isPresented: $showEditor) {
     NavigationStack {
-     spellView.padding(16)
-      .navigationTitle("Your message")
+     ScrollView {
+      VStack(alignment: .leading, spacing: 12) {
+       if speech.continuousListening || !speech.transcript.isEmpty {
+        VStack(alignment: .leading, spacing: 4) {
+         Text(speech.status).font(.caption).foregroundStyle(.yellow)
+         Text(speech.transcript.isEmpty ? "Listening…" : String(speech.transcript.suffix(220)))
+          .font(.title3).lineLimit(4)
+        }.frame(maxWidth: .infinity, alignment: .leading).padding(12)
+         .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 12))
+         .accessibilityLabel("Their reply: \(speech.transcript)")
+       }
+       spellView
+      }.padding(16)
+     }
+      .navigationBarTitleDisplayMode(.inline)
       .toolbar { ToolbarItem(placement: .confirmationAction) { Button("Done") { showEditor = false } } }
-    }.presentationDetents([.medium, .large])
+    }.presentationDetents([.large])
+     .onAppear { messageFocused = true }
+     .onDisappear { messageFocused = false }
    }
  }
  private var trainingControls: some View {
@@ -177,8 +193,7 @@ struct ConversationView: View {
  }
  private var spellView: some View {
   VStack(alignment: .leading, spacing: 12) {
-   Text("Your message").font(.headline)
-   TextEditor(text: $draft.text).frame(height: 88).padding(8)
+   TextEditor(text: $draft.text).focused($messageFocused).frame(height: 88).padding(8)
     .scrollContentBackground(.hidden)
     .font(.title2).autocorrectionDisabled().accessibilityLabel("Your editable message")
    HStack {
