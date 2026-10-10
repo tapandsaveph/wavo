@@ -9,9 +9,10 @@
 1. Clone this repository on a Mac with Xcode 27 installed.
 2. From the repository folder, run `bash scripts/setup-offline-voice.sh`. This downloads the pinned speech runtime and voice from upstream and checks their SHA-256 hashes. Internet is needed for this one-time build setup.
 3. Open `ASLBridge.xcodeproj`. For iOS 18 or newer, connect and trust your iPhone, enable Developer Mode, select your own team under **Signing & Capabilities**, and change the bundle identifier to a unique value. Select your phone and Run. TestFlight is not required.
-4. Select **Spell**, turn on the camera and hold a letter steadily. Letters are added automatically. Lower your hand briefly before repeating a letter. Use **Space**, delete, or tap the message to edit. Review it, then tap **Speak**.
-5. Select **Signs (Test)** to try **Hello** and **Thank you**. Keep your face, whole hand and wrist visible. These experimental predictions also go into the editable draft.
-6. Tap the microphone to start/pause live captions. The app pauses transcription while speaking its own audio and resumes afterward. **Listen** offers a larger caption view.
+4. If iPhone shows **Untrusted Developer**, open **Settings → General → VPN & Device Management**. Under **Developer App**, select the account that signed the installed build and tap **Trust**, then confirm. For a demo build installed by Nehro, select **nehroranay24@icloud.com** if that account is listed. If you built with your own team in step 3, select your own account instead. Keep the phone online for the initial verification, then reopen Wavo.
+5. Select **Spell**, turn on the camera and hold a letter steadily. Letters are added automatically. Lower your hand briefly before repeating a letter. Use **Space**, delete, or tap the message to edit. Review it, then tap **Speak**.
+6. Select **Signs (Test)** to try **Hello** and **Thank you**. Keep your face, whole hand and wrist visible. These experimental predictions also go into the editable draft.
+7. Tap the microphone to start/pause live captions. The app pauses transcription while speaking its own audio and resumes afterward. **Listen** offers a larger caption view.
 
 A simulator can build and test typing/UI/voice; physical iPhone camera input is needed for live sign recognition. Grant camera, microphone and speech permissions when requested.
 
