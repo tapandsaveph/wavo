@@ -13,6 +13,7 @@ struct ConversationView: View {
  @State private var trainingLabel = TrainingClipLabel.thankYou
  @State private var trainingSplit = TrainingClipSplit.training
  @State private var reference: VocabularyEntry?
+ @Environment(\.accessibilityReduceMotion) private var reduceMotion
  @Environment(\.scenePhase) private var scenePhase
  private enum InputMode: String, CaseIterable { case spell = "Spell", signs = "Signs (Test)", listen = "Listen" }
  private let teal = Color.yellow
@@ -53,6 +54,7 @@ struct ConversationView: View {
    Color.black.ignoresSafeArea()
    CameraPreview(session: camera.session).ignoresSafeArea()
     .opacity(camera.running ? 1 : 0).accessibilityHidden(true)
+    .animation(reduceMotion ? nil : .easeInOut(duration: 0.28), value: camera.running)
    LinearGradient(colors: [.black.opacity(0.12), .clear, .black.opacity(0.12)], startPoint: .top, endPoint: .bottom)
     .ignoresSafeArea().allowsHitTesting(false)
    VStack(spacing: 8) {
@@ -88,7 +90,7 @@ struct ConversationView: View {
       .accessibilityLabel("Their reply: \(speech.transcript)")
     }
     VStack(spacing: 12) {
-     if !camera.running && mode != .listen {
+     if mode != .listen {
       Image("WavoLogo")
        .resizable().scaledToFit().frame(width: 88, height: 88)
        .clipShape(RoundedRectangle(cornerRadius: 22))
@@ -109,6 +111,10 @@ struct ConversationView: View {
        .fixedSize(horizontal: false, vertical: true)
      }
     }.padding(.horizontal, 24).frame(maxWidth: .infinity, maxHeight: .infinity)
+     .opacity(camera.running ? 0 : 1)
+     .allowsHitTesting(!camera.running)
+     .accessibilityHidden(camera.running)
+     .animation(reduceMotion ? nil : .easeInOut(duration: 0.28), value: camera.running)
     if mode != .listen {
      HStack(spacing: 8) {
       Text(camera.status).font(.caption).lineLimit(2)
