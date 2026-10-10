@@ -2,7 +2,15 @@
 
 <img src="docs/assets/wavo-logo.png" alt="Wavo logo: a waving hand on a yellow background" width="160">
 
-**Two-way sign language communication app for iPhone.** Turn fingerspelling and supported American Sign Language (ASL) signs into spoken messages, and speech into live captions. Sign recognition and voice generation run on your phone.
+**Two-way sign language communication app for iPhone.** Turn typed messages, fingerspelling and supported American Sign Language (ASL) signs into speech, and spoken replies into live captions. Sign recognition and voice generation run on your phone.
+
+## Ways to communicate
+
+- **Type → speech:** Type a message, review it and tap **Speak** to say it aloud with the offline voice. No signing or camera is needed for this path.
+- **Sign → speech:** Fingerspell or use supported experimental signs to compose a message, then review it and tap **Speak**.
+- **Speech → captions:** Read the hearing person’s spoken replies as live captions.
+
+Typing also lets you express longer thoughts or correct recognition mistakes before speaking.
 
 ## Try it on an iPhone
 
@@ -12,7 +20,8 @@
 4. If iPhone shows **Untrusted Developer**, open **Settings → General → VPN & Device Management**. Under **Developer App**, select the account that signed the installed build and tap **Trust**, then confirm. For a demo build installed by Nehro, select **nehroranay24@icloud.com** if that account is listed. If you built with your own team in step 3, select your own account instead. Keep the phone online for the initial verification, then reopen Wavo.
 5. Select **Spell**, turn on the camera and hold a letter steadily. Letters are added automatically. Lower your hand briefly before repeating a letter. Use **Space**, delete, or tap the message to edit. Review it, then tap **Speak**.
 6. Select **Signs (Test)** to try **Hello** and **Thank you**. Keep your face, whole hand and wrist visible. These experimental predictions also go into the editable draft.
-7. Tap the microphone to start/pause live captions. The app pauses transcription while speaking its own audio and resumes afterward. **Listen** offers a larger caption view.
+7. To speak a typed message, tap **Your message…** (or the existing draft), type your message in the editor, then tap **Speak**. You can leave the camera off.
+8. Tap the microphone to start/pause live captions. The app pauses transcription while speaking its own audio and resumes afterward. **Listen** offers a larger caption view.
 
 A simulator can build and test typing/UI/voice; physical iPhone camera input is needed for live sign recognition. Grant camera, microphone and speech permissions when requested.
 
@@ -34,13 +43,13 @@ See [full disclosures](docs/Hackathon-Disclosure.md), [third-party notices](THIR
 
 ## Hackathon contributions
 
-SwiftUI conversation interface; automatic stable letter capture and repeat controls; editable reviewed draft; continuous caption restart handling; caption pause/resume around speech; camera lifecycle and empty state; training-clip recording; custom Hello/Thank you experiments; bundled offline neural voice integration.
+SwiftUI conversation interface; automatic stable letter capture and repeat controls; editable reviewed draft and typing-to-speech; continuous caption restart handling; caption pause/resume around speech; camera lifecycle and empty state; training-clip recording; custom Hello/Thank you experiments; bundled offline neural voice integration.
 
 ## Limits and verification
 
 This is a prototype, not an unrestricted conversational ASL translator. Spell and Signs are separate modes. Thank you can mistake ordinary movements for signs; the small training dataset does not establish accuracy across signers. J/Z involve motion and may need manual entry. Review every draft before speaking.
 
-The user confirmed letters, Hello, Thank you and continuous captions on their iPhone. Offline voice generated real audio in a simulator; device/simulator builds passed and the new build was installed. Phone voice playback and airplane-mode success have not yet been reported. No broad accuracy or iPhone latency benchmark is claimed.
+The user confirmed letters, Hello, Thank you, continuous captions and typing-to-speech on their iPhone. Offline voice generated real audio in a simulator; device/simulator builds passed and the new build was installed. Phone voice playback and airplane-mode success have not yet been reported. No broad accuracy or iPhone latency benchmark is claimed.
 
 ## Build and tests
 
