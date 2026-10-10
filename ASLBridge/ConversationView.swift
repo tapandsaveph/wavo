@@ -89,12 +89,16 @@ struct ConversationView: View {
     }
     VStack(spacing: 12) {
      if !camera.running && mode != .listen {
-      Image(systemName: "camera")
-       .font(.largeTitle).foregroundStyle(.yellow).accessibilityHidden(true)
-      Text("Turn on camera to start translating")
+      Image("WavoLogo")
+       .resizable().scaledToFit().frame(width: 88, height: 88)
+       .clipShape(RoundedRectangle(cornerRadius: 22))
+       .accessibilityHidden(true)
+      Text("Wavo").font(.largeTitle.weight(.bold)).foregroundStyle(.yellow)
+      Text("Make yourself heard.")
        .font(.title2.weight(.semibold)).multilineTextAlignment(.center)
-      Text("Tap the camera button below, then keep your hand in view.")
-       .font(.body).foregroundStyle(.secondary).multilineTextAlignment(.center)
+      Text("Turn on the camera below to sign, or tap the message box to type.")
+       .font(.body).foregroundStyle(.white.opacity(0.8)).multilineTextAlignment(.center)
+       .fixedSize(horizontal: false, vertical: true)
      }
     }.padding(.horizontal, 24).frame(maxWidth: .infinity, maxHeight: .infinity)
     if mode != .listen {
