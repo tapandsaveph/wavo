@@ -96,7 +96,15 @@ struct ConversationView: View {
       Text("Wavo").font(.largeTitle.weight(.bold)).foregroundStyle(.yellow)
       Text("Make yourself heard.")
        .font(.title2.weight(.semibold)).multilineTextAlignment(.center)
-      Text("Turn on the camera below to sign, or tap the message box to type.")
+      Button {
+       if !speech.continuousListening { speech.startContinuousListening() }
+       camera.start(recognizeHello: mode == .signs, recognizeThankYou: mode == .signs)
+      } label: {
+       Label("Start camera", systemImage: "camera.fill")
+        .font(.headline).frame(maxWidth: .infinity, minHeight: 56)
+      }.buttonStyle(.borderedProminent).foregroundStyle(.black)
+       .disabled(camera.recording)
+      Text("Keep your hand in view to sign, or tap the message box to type.")
        .font(.body).foregroundStyle(.white.opacity(0.8)).multilineTextAlignment(.center)
        .fixedSize(horizontal: false, vertical: true)
      }
@@ -106,10 +114,11 @@ struct ConversationView: View {
       Text(camera.status).font(.caption).lineLimit(2)
        .accessibilityLabel("Camera status: \(camera.status)")
       Spacer(minLength: 0)
-      Button {
-       if camera.running { camera.stop() } else { if !speech.continuousListening { speech.startContinuousListening() }; camera.start(recognizeHello: mode == .signs, recognizeThankYou: mode == .signs) }
-      } label: { Image(systemName: camera.running ? "stop.circle" : "camera").font(.title3).frame(width: 44, height: 44) }
-       .accessibilityLabel(camera.running ? "Stop camera" : "Start camera").disabled(camera.recording)
+      if camera.running {
+       Button { camera.stop() } label: {
+        Label("Stop camera", systemImage: "stop.circle").frame(minHeight: 44)
+       }.disabled(camera.recording)
+      }
      }.padding(.horizontal, 12).background(.regularMaterial, in: RoundedRectangle(cornerRadius: 14))
      compactMessage
     } else {
