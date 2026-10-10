@@ -1,6 +1,6 @@
 # Wavo
 
-An iPhone hackathon prototype that helps a Deaf ASL user compose a reviewed spoken message and read a hearing person's reply as live captions. Camera recognition and speech generation run locally on the phone.
+**Two-way sign language communication app for iPhone.** Turn fingerspelling and supported American Sign Language (ASL) signs into spoken messages, and speech into live captions. Sign recognition and voice generation run on your phone.
 
 ## Try it on an iPhone
 
