@@ -1,5 +1,6 @@
 import SwiftUI
 import AVFoundation
+import UIKit
 
 struct ConversationView: View {
  @StateObject private var camera = CameraService()
@@ -8,7 +9,6 @@ struct ConversationView: View {
  @State private var mode = InputMode.spell
  @State private var tab = 0
  @State private var showTraining = false
- @FocusState private var messageFocused: Bool
  @State private var showEditor = false
  @State private var trainingLabel = TrainingClipLabel.thankYou
  @State private var trainingSplit = TrainingClipSplit.training
@@ -165,8 +165,7 @@ struct ConversationView: View {
       .navigationBarTitleDisplayMode(.inline)
       .toolbar { ToolbarItem(placement: .confirmationAction) { Button("Done") { showEditor = false } } }
     }.presentationDetents([.large])
-     .onAppear { messageFocused = true }
-     .onDisappear { messageFocused = false }
+
    }
  }
  private var trainingControls: some View {
@@ -193,9 +192,14 @@ struct ConversationView: View {
  }
  private var spellView: some View {
   VStack(alignment: .leading, spacing: 12) {
-   TextEditor(text: $draft.text).focused($messageFocused).frame(height: 88).padding(8)
-    .scrollContentBackground(.hidden)
-    .font(.title2).autocorrectionDisabled().accessibilityLabel("Your editable message")
+   ZStack(alignment: .topLeading) {
+    if draft.text.isEmpty {
+     Text("Type here…").font(.title2).foregroundStyle(.secondary)
+      .padding(.horizontal, 16).padding(.vertical, 18).allowsHitTesting(false)
+    }
+    FocusedMessageInput(text: $draft.text).frame(height: 110).padding(8)
+   }.background(Color(uiColor: .secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 12))
+    .overlay(RoundedRectangle(cornerRadius: 12).stroke(.yellow, lineWidth: 1.5))
    HStack {
     Button("Space") { draft.addSpace() }
     Button("Delete", systemImage: "delete.left") { draft.deleteLast() }.disabled(draft.text.isEmpty)
@@ -242,6 +246,46 @@ struct ConversationView: View {
    }.buttonStyle(.borderedProminent).controlSize(.large).foregroundStyle(.black)
    Button("Clear Captions") { speech.stopAll(); speech.transcript = "" }.buttonStyle(.bordered)
    Text("English captions run on this device when supported. Audio and conversations are not saved.").font(.caption).foregroundStyle(.secondary)
+  }
+ }
+}
+
+// Focus belongs to the presented input; request it only after UIKit attaches its window.
+private struct FocusedMessageInput: UIViewRepresentable {
+ @Binding var text: String
+ func makeCoordinator() -> Coordinator { Coordinator(self) }
+ func makeUIView(context: Context) -> AutoFocusTextView {
+  let view = AutoFocusTextView()
+  view.delegate = context.coordinator
+  view.backgroundColor = .clear
+  view.textColor = .label
+  view.tintColor = .systemYellow
+  view.font = .preferredFont(forTextStyle: .title2)
+  view.adjustsFontForContentSizeCategory = true
+  view.autocorrectionType = .no
+  view.accessibilityLabel = "Message to speak"
+  view.text = text
+  return view
+ }
+ func updateUIView(_ view: AutoFocusTextView, context: Context) {
+  context.coordinator.parent = self
+  if view.text != text { view.text = text }
+ }
+ final class Coordinator: NSObject, UITextViewDelegate {
+  var parent: FocusedMessageInput
+  init(_ parent: FocusedMessageInput) { self.parent = parent }
+  func textViewDidChange(_ textView: UITextView) { parent.text = textView.text }
+ }
+}
+private final class AutoFocusTextView: UITextView {
+ private var requestedFocus = false
+ override func didMoveToWindow() {
+  super.didMoveToWindow()
+  guard window != nil, !requestedFocus else { return }
+  requestedFocus = true
+  DispatchQueue.main.async { [weak self] in
+   guard let self, self.window != nil else { return }
+   self.becomeFirstResponder()
   }
  }
 }
