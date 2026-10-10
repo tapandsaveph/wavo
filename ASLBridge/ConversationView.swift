@@ -91,6 +91,7 @@ struct ConversationView: View {
     }
     VStack(spacing: 12) {
      if mode != .listen {
+      VStack(spacing: 16) {
       Image("WavoLogo")
        .resizable().scaledToFit().frame(width: 88, height: 88)
        .clipShape(RoundedRectangle(cornerRadius: 22))
@@ -103,12 +104,15 @@ struct ConversationView: View {
        camera.start(recognizeHello: mode == .signs, recognizeThankYou: mode == .signs)
       } label: {
        Label("Start camera", systemImage: "camera.fill")
-        .font(.headline).frame(maxWidth: .infinity, minHeight: 56)
-      }.buttonStyle(.borderedProminent).foregroundStyle(.black)
+        .font(.headline).frame(maxWidth: .infinity).padding(.vertical, 18)
+        .foregroundStyle(.black)
+        .background(.yellow, in: RoundedRectangle(cornerRadius: 16))
+      }.buttonStyle(.plain)
        .disabled(camera.recording)
       Text("Keep your hand in view to sign, or tap the message box to type.")
        .font(.body).foregroundStyle(.white.opacity(0.8)).multilineTextAlignment(.center)
        .fixedSize(horizontal: false, vertical: true)
+      }.fixedSize(horizontal: false, vertical: true)
      }
     }.padding(.horizontal, 24).frame(maxWidth: .infinity, maxHeight: .infinity)
      .opacity(camera.running ? 0 : 1)
