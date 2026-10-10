@@ -31,4 +31,4 @@ Submission is through the [Cerebral Valley event page](https://cerebralvalley.ai
 
 Judging from instruction photos: usefulness 25%, local AI 25%, execution 20%, innovation 15%, product/demo quality 15%.
 
-For ASL Bridge: README should contain description, team, demo/social links, build instructions, offline limitations and concise disclosure. Link [Hackathon-Disclosure.md](Hackathon-Disclosure.md) for detailed provenance and limitations. Pending: team details, public repo, demo/social links, offline phone verification and runtime distribution licensing resolution.
+For Wavo: README should contain description, team, demo/social links, build instructions, offline limitations and concise disclosure. Link [Hackathon-Disclosure.md](Hackathon-Disclosure.md) for detailed provenance and limitations. Pending: team details, public repo, demo/social links, offline phone verification and runtime distribution licensing resolution.

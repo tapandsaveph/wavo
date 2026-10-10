@@ -1,4 +1,4 @@
-# Execution ledger — ASL Bridge implementation plan
+# Execution ledger — Wavo implementation plan
 
 - Plan and PRD approved in chat; user selected inline execution.
 - Ruling: independent project folder is the isolated implementation workspace; upstream probe is preserved.

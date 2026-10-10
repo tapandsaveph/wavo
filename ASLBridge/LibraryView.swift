@@ -55,7 +55,7 @@ struct LibraryView: View {
      }
     }
     Section("Availability") {
-     Text("Reference pages may include signing videos or image sequences. They need internet and are not downloaded or saved by ASL Bridge. If a reference cannot load, try again when connected.").font(.caption)
+     Text("Reference pages may include signing videos or image sequences. They need internet and are not downloaded or saved by Wavo. If a reference cannot load, try again when connected.").font(.caption)
     }
    }.navigationTitle("ASL Library")
     .searchable(text: $query, prompt: "Find a sign")

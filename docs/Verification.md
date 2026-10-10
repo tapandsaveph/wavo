@@ -2,7 +2,7 @@
 
 ## Confirmed
 - Upstream alphabet recognizer was installed on iPhone 14 Pro Max (iOS 18.7.8); user reported it recognizes letters.
-- New ASL Bridge project builds for the iOS simulator and physical iPhone using Xcode 27.
+- New Wavo project builds for the iOS simulator and physical iPhone using Xcode 27.
 - New app installed and launched on the physical iPhone using the user's Personal Team.
 - Simulator initial screen was rendered and inspected.
 - Three Swift Testing tests pass against the app's shared message/audio state: repeated letters/corrections, rejected stale/uncertain/invalid candidates, and exclusive audio activity.

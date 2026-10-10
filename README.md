@@ -1,4 +1,4 @@
-# ASL Bridge
+# Wavo
 
 An iPhone hackathon prototype that helps a Deaf ASL user compose a reviewed spoken message and read a hearing person's reply as live captions. Camera recognition and speech generation run locally on the phone.
 

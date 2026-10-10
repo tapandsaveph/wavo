@@ -1,4 +1,4 @@
-# Hackathon disclosure — ASL Bridge
+# Hackathon disclosure — Wavo
 
 Native iPhone prototype helping a Deaf signer compose a reviewed spoken message and read a hearing person's replies as captions. Supports fingerspelled alphabet poses and experimental Hello / Thank you recognition, not unrestricted conversational ASL.
 
